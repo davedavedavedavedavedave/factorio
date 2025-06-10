@@ -9,12 +9,16 @@
     a {
       color: #fff;
     }
-    ol {
+    .loadFinished ol {
       display: none;
     }
-    ol ol,
-    ol:target {
+    .loadFinished ol ol,
+    .loadFinished ol:target {
       display: block;
+    }
+    li {
+      float: left;
+      clear: both;
     }
     .consumption {
       vertical-align: middle;
@@ -47,17 +51,91 @@
     .consumption.brick::before {
       background-position: -216px -48px;
     }
+    .build {
+      white-space: nowrap;
+      font-size: 0;
+      overflow: hidden;
+      max-height: 90vh;
+      max-width: 90vw;
+      cursor: grab;
+      border: 2px solid #ccc;
+      position: relative;
+    }
+    .loadFinished .group {
+      transform-origin: center;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .grabbing {
+      cursor: grabbing;
+    }
+    .build img {
+      display: inline-block;
+    }
   </style>
 </head>
 <body>
-  <a href="#nauvis">Nauvis</a> | <a href="#vulcanus">Vulcanus</a> | <a href="#gleba">Gleba</a>
+  <a href="#nauvis">Nauvis</a> | <a href="#vulcanus">Vulcanus</a> | <a href="#gleba">Gleba</a> | <a href="#fulgora">Fulgora</a> | <a href="#space">Space</a>
+  <ol id="space">
+    <li class="build">
+      <div class="group">
+        <img src="space-1.png" />
+      </div>
+    </li>
+    <li class="build">
+      <div class="group">
+        <img src="space-2.png" />
+      </div>
+    </li>
+    <li class="build">
+      <div class="group">
+        <img src="space-3.png" />
+      </div>
+    </li>
+  </ol>
+  <ol id="fulgora">
+    <li class="build">
+      <div class="group">
+        <img src="fulgora-1.png" />
+      </div>
+    </li>
+    <li>???</li>
+    <li>profit!</li>
+  </ol>
   <ol id="gleba">
+    <li class="build">
+      <div class="group">
+        <img src="gleba-1.png" />
+      </div>
+    </li>
+    <li class="build">
+      <div class="group">
+        <img src="gleba-2.png" />
+      </div>
+    </li>
+    <li class="build">
+      <div class="group">
+        <img src="gleba-3.png" />
+      </div>
+    </li>
     <li>mine copper + iron stromatolite</li>
     <li>mine jellynut + yumako</li>
     <li>craft heating tower -> setup power</li>
+    <li>stone mining + landfill production</li>
     <li>~48 yumako trees, ~28 jellynut trees</li>
   </ol>
   <ol id="vulcanus">
+    <li class="build">
+      <div class="group">
+        <img src="vulcanus-1.png" />
+      </div>
+    </li>
+    <li class="build">
+      <div class="group">
+        <img src="vulcanus-2.png" />
+      </div>
+    </li>
     <li>Sulfur pumps -> steam -> turbines</li>
     <li>coal and calcite mining outposts (into chests)</li>
     <li>handfed foundry production close to sulfuric acid</li>
@@ -72,6 +150,16 @@
     </li>
   </ol>
   <ol id="nauvis">
+    <li class="build">
+      <div class="group">
+        <img src="nauvis-1.png" />
+        <img src="nauvis-2.png" />
+        <img src="nauvis-3.png" />
+        <img src="nauvis-4.png" />
+        <img src="nauvis-5.png" />
+        <img src="nauvis-6.png" />
+      </div>
+    </li>
     <li>
       <span class="consumption iron"> 0/s</span>
       <span class="consumption copper"> 0/s</span>
@@ -329,5 +417,52 @@
       10 production science
     </li>
   </ol>
+
+  <script type="text/javascript">
+    window.addEventListener('load', e => {
+      const builds = document.querySelectorAll('.build');
+      let scrollSubject, mousePosition = {};
+
+      document.body.addEventListener('mouseup', e => {
+        if (scrollSubject) {
+          scrollSubject.className = scrollSubject.className.split(' ').filter(i => i != 'grabbing').join(' ');
+          scrollSubject = null;
+        }
+      });
+      document.body.addEventListener('mousemove', e => {
+        if (scrollSubject) {
+          e.preventDefault();
+          let group = scrollSubject.querySelector('.group');
+          group.style.left = parseInt(group.style.left) + (e.screenX - mousePosition.x) + 'px';
+          group.style.top = parseInt(group.style.top) + (e.screenY - mousePosition.y) + 'px';
+          mousePosition.x = e.screenX;
+          mousePosition.y = e.screenY;
+        }
+      });
+      for (let i = 0; i < builds.length; i++) {
+        builds[i].style.width = builds[i].clientWidth + 'px';
+        builds[i].style.height = builds[i].clientHeight + 'px';
+        builds[i].querySelector('.group').style.left = .5*builds[i].clientWidth - .5*builds[i].scrollWidth + 'px';
+        builds[i].querySelector('.group').style.top = .5*builds[i].clientHeight - .5*builds[i].scrollHeight + 'px';
+        builds[i].addEventListener('mousedown', e => { 
+          e.preventDefault();
+          mousePosition.x = e.screenX;
+          mousePosition.y = e.screenY;
+          scrollSubject = builds[i];
+          builds[i].className += ' grabbing';
+        });
+        builds[i].addEventListener('mousewheel', e => {
+          e.preventDefault();
+          let group = builds[i].querySelector('.group');
+          let currentZoom = 1;
+          if (group.style.transform) {
+            currentZoom = group.style.transform.replace(/^scale\((.*)\)$/, '$1');
+          }
+          group.style.transform = 'scale(' + currentZoom * (e.deltaY > 0 ? .9 : 1.11111111111111111) + ')';
+        })
+      }
+      document.body.className += 'loadFinished';
+    });
+  </script>
 </body>
 </html>
