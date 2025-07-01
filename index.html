@@ -27,29 +27,65 @@
       border-right: 1px dashed #666;
       margin-right: 10px;
     }
-    .consumption::before {
+    .consumption::before,
+    .icon::before {
       vertical-align: middle;
       content: "";
       display: inline-block;
-      background-image: url(recipe.png);
-      width: 24px;
-      height: 24px;
-      background-size: 648px 624px;
+      background-image: url(item.png);
+      width: 30px;
+      height: 30px;
+      background-size: 570px 540px;
     }
-    .consumption.iron::before {
-      background-position: -456px 0px;
+    .stone::before {
+      background-position: -30px -180px;
     }
-    .consumption.copper::before {
-      background-position: -552px -24px;
+    .iron::before {
+      background-position: -90px -390px;
     }
-    .consumption.steel::before {
-      background-position: -216px -96px;
+    .iron-ore::before {
+      background-position: -120px -390px;
     }
-    .consumption.plastic::before {
-      background-position: -360px -96px;
+    .copper::before {
+      background-position: -480px -330px;
     }
-    .consumption.brick::before {
-      background-position: -216px -48px;
+    .copper-ore::before {
+      background-position: -480px -360px;
+    }
+    .steel::before {
+      background-position: -150px -180px;
+    }
+    .plastic::before {
+      background-position: -330px -60px;
+    }
+    .brick::before {
+      background-position: -120px -180px;
+    }
+    .miner::before {
+      background-position: -120px -450px;
+    }
+    .stone-furnace::before {
+      background-position: -90px -180px;
+    }
+    .stone-furnace::before {
+      background-position: -90px -180px;
+    }
+    .steel-furnace::before {
+      background-position: -180px -180px;
+    }
+    .pump::before {
+      background-position: -300px -270px;
+    }
+    .crude-oil::before {
+      background-size: 180px 180px;
+      background-image: url(fluid.png);
+      background-position: 0px -150px;
+    }
+    .refinery::before {
+      background-position: -360px -120px;
+    }
+    .chemical-plant::before {
+      background-position: -240px -480px;
     }
     .build {
       white-space: nowrap;
@@ -60,6 +96,10 @@
       cursor: grab;
       border: 2px solid #ccc;
       position: relative;
+    }
+    .build:not(.loaded)::before {
+      content: "click to load image";
+      font-size: 14px;
     }
     .loadFinished .group {
       transform-origin: center;
@@ -80,24 +120,24 @@
   <ol id="space">
     <li class="build">
       <div class="group">
-        <img src="space-1.png" />
+        <div data-src="space-1.png"></div>
       </div>
     </li>
     <li class="build">
       <div class="group">
-        <img src="space-2.png" />
+        <div data-src="space-2.png"></div>
       </div>
     </li>
     <li class="build">
       <div class="group">
-        <img src="space-3.png" />
+        <div data-src="space-3.png"></div>
       </div>
     </li>
   </ol>
   <ol id="fulgora">
     <li class="build">
       <div class="group">
-        <img src="fulgora-1.png" />
+        <div data-src="fulgora-1.png"></div>
       </div>
     </li>
     <li>???</li>
@@ -106,17 +146,17 @@
   <ol id="gleba">
     <li class="build">
       <div class="group">
-        <img src="gleba-1.png" />
+        <div data-src="gleba-1.png"></div>
       </div>
     </li>
     <li class="build">
       <div class="group">
-        <img src="gleba-2.png" />
+        <div data-src="gleba-2.png"></div>
       </div>
     </li>
     <li class="build">
       <div class="group">
-        <img src="gleba-3.png" />
+        <div data-src="gleba-3.png"></div>
       </div>
     </li>
     <li>mine copper + iron stromatolite</li>
@@ -128,12 +168,12 @@
   <ol id="vulcanus">
     <li class="build">
       <div class="group">
-        <img src="vulcanus-1.png" />
+        <div data-src="vulcanus-1.png"></div>
       </div>
     </li>
     <li class="build">
       <div class="group">
-        <img src="vulcanus-2.png" />
+        <div data-src="vulcanus-2.png"></div>
       </div>
     </li>
     <li>Sulfur pumps -> steam -> turbines</li>
@@ -150,14 +190,42 @@
     </li>
   </ol>
   <ol id="nauvis">
+    <li>
+      +15 <span class="icon miner"></span> on <span class="icon iron-ore"></span><br/>
+      +24 <span class="icon stone-furnace"></span> for <span class="icon iron"></span>
+    </li>
+    <li>
+      +5 <span class="icon miner"></span> on <span class="icon copper-ore"></span><br/>
+      +8 <span class="icon stone-furnace"></span> for <span class="icon copper"></span>
+    </li>
+    <li>
+      +45 <span class="icon miner"></span> on <span class="icon iron-ore"></span> (total of 60)<br/>
+      +72 <span class="icon stone-furnace"></span> for <span class="icon iron"></span> (total of 96)
+    </li>
+    <li>
+      +10 <span class="icon miner"></span> on <span class="icon copper-ore"></span> (total of 15)<br/>
+      +16 <span class="icon stone-furnace"></span> for <span class="icon copper"></span> (total of 24)
+    </li>
+    <li>
+      +15 <span class="icon miner"></span> on <span class="icon stone"></span><br/>
+      +12 <span class="icon stone-furnace"></span> for <span class="icon brick"></span>
+    </li>
+    <li>
+      +15 <span class="icon miner"></span> on <span class="icon iron-ore"></span> (total of 75)<br/>
+      +48 <span class="icon stone-furnace"></span> for <span class="icon steel"></span> (24 of which for <span class="icon iron"></span>)
+    </li>
+    <li>
+      +? <span class="icon pump"></span> on <span class="icon crude-oil"></span><br/>
+    </li>
     <li class="build">
       <div class="group">
-        <img src="nauvis-1.png" />
-        <img src="nauvis-2.png" />
-        <img src="nauvis-3.png" />
-        <img src="nauvis-4.png" />
-        <img src="nauvis-5.png" />
-        <img src="nauvis-6.png" />
+        <div data-src="nauvis-1.png"></div>
+        <div data-src="nauvis-2.png"></div>
+        <div data-src="nauvis-3.png"></div>
+        <div data-src="nauvis-4.png"></div>
+        <div data-src="nauvis-5.png"></div>
+        <div data-src="nauvis-6.png"></div>
+        <div data-src="nauvis-7.png"></div>
       </div>
     </li>
     <li>
@@ -439,13 +507,28 @@
           mousePosition.y = e.screenY;
         }
       });
+      
       for (let i = 0; i < builds.length; i++) {
-        builds[i].style.width = builds[i].clientWidth + 'px';
-        builds[i].style.height = builds[i].clientHeight + 'px';
-        builds[i].querySelector('.group').style.left = .5*builds[i].clientWidth - .5*builds[i].scrollWidth + 'px';
-        builds[i].querySelector('.group').style.top = .5*builds[i].clientHeight - .5*builds[i].scrollHeight + 'px';
-        builds[i].addEventListener('mousedown', e => { 
+        builds[i].addEventListener('mousedown', e => {
           e.preventDefault();
+          if (!builds[i].className.match('loaded') && builds[i].className.match('build')) {
+            builds[i].style.width = '0px';
+            builds[i].style.height = '0px';
+            builds[i].className += ' loaded';
+
+            let imgs = builds[i].querySelectorAll('[data-src]')
+            for (let j = 0; j < imgs.length; j++) {
+              let img = document.createElement('img');
+              img.src = imgs[j].dataset.src;
+              img.addEventListener('load', e => {
+                builds[i].style.width = parseInt(builds[i].style.width) + img.clientWidth + 'px';
+                builds[i].style.height = img.clientHeight + 'px';
+                builds[i].querySelector('.group').style.left = '0px';
+                builds[i].querySelector('.group').style.top = '0px';
+              });
+              imgs[j].parentNode.appendChild(img);
+            }
+          }
           mousePosition.x = e.screenX;
           mousePosition.y = e.screenY;
           scrollSubject = builds[i];
