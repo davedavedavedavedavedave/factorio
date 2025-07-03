@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
 <head>
   <title>Factorio!</title>
@@ -12,13 +13,65 @@
     .loadFinished ol {
       display: none;
     }
-    .loadFinished ol ol,
     .loadFinished ol:target {
-      display: block;
+      display: flex;
     }
     li {
-      float: left;
-      clear: both;
+      padding: 0;
+      margin: 0;
+      border-bottom: 1px dashed #666;
+      display: flex;
+      align-items: center;
+    }
+    li::before {
+      content: counter(count, decimal) ") ";
+      counter-increment: count 1;
+      display: inline-block;
+      padding: 5px 10px;
+    }
+    ol {
+      list-style: none;
+      margin: 16px 0 0;
+      padding: 0;
+      vertical-align: middle;
+      counter-reset: count 0;
+      flex-direction: column;
+    }
+    ol ol {
+      display: flex!important;
+      list-style: none;
+      white-space: nowrap;
+      flex-direction: row;
+      margin: 0;
+    }
+    li li {
+      display: inline-block;
+      border-left: 1px dashed #666;
+      border-bottom: none;
+      width: 350px;
+      padding: 10px 10px;
+      position: relative;
+      cursor: pointer;
+    }
+    li li:hover {
+      background-color: #555;
+    }
+    li li::before {
+      content: attr(data-time);
+      position: absolute;
+      right: 2px;
+      top: 2px;
+      font-size: 2em;
+      opacity: .2;
+    }
+    li li[data-done="true"]::before {
+      opacity: 1;
+    }
+    li li[data-done="true"] {
+      background-color: rgba(0, 0, 0, .2);
+    }
+    li li[data-done="true"] > * {
+      opacity: .4;
     }
     .consumption {
       vertical-align: middle;
@@ -76,16 +129,116 @@
     .pump::before {
       background-position: -300px -270px;
     }
-    .crude-oil::before {
-      background-size: 180px 180px;
-      background-image: url(fluid.png);
-      background-position: 0px -150px;
+    .assembly-1::before {
+      background-position: -390px -510px;
+    }
+    .assembly-2::before {
+      background-position: -360px -510px;
+    }
+    .gear::before {
+      background-position: -150px -390px;
+    }
+    .boiler::before {
+      background-position: -510px -270px;
+    }
+    .steam-engine::before {
+      background-position: -210px -60px;
+    }
+    .cable::before {
+      background-position: -480px -390px;
+    }
+    .inserter::before {
+      background-position: -240px -390px;
+    }
+    .fast-inserter::before {
+      background-position: -450px -60px;
+    }
+    .long-inserter::before {
+      background-position: -180px -360px;
+    }
+    .yellow-belt::before {
+      background-position: -120px -120px;
+    }
+    .yellow-underground::before {
+      background-position: -90px -90px;
+    }
+    .yellow-splitter::before {
+      background-position: -210px -150px;
+    }
+    .red-belt::before {
+      background-position: -420px -420px;
+    }
+    .red-underground::before {
+      background-position: -390px -420px;
+    }
+    .red-splitter::before {
+      background-position: -450px 0px;
+    }
+    .ammo::before {
+      background-position: -360px -420px;
+    }
+    .red-ammo::before {
+      background-position: -330px -210px;
+    }
+    .wall::before {
+      background-position: -60px -180px;
+    }
+    .grenade::before {
+      background-position: -420px -270px;
+    }
+    .pipe::before {
+      background-position: -330px -120px;
+    }
+    .underground-pipe::before {
+      background-position: -330px -150px;
+    }
+    .engine::before {
+      background-position: -450px -360px;
+    }
+    .coal::before {
+      background-position: -120px -480px;
+    }
+    .sulfur::before {
+      background-position: -180px -60px;
+    }
+    .science-1::before {
+      background-position: -240px -510px;
+    }
+    .science-2::before {
+      background-position: -210px -360px;
+    }
+    .science-3::before {
+      background-position: -360px -330px;
+    }
+    .science-4::before {
+      background-position: -210px -480px;
+    }
+    .lab::before {
+      background-position: -390px -300px;
+    }
+    .green-circuit::before {
+      background-position: -30px -450px;
+    }
+    .red-circuit::before {
+      background-position: -540px -180px;
     }
     .refinery::before {
       background-position: -360px -120px;
     }
     .chemical-plant::before {
       background-position: -240px -480px;
+    }
+    .crude-oil::before {
+      background-size: 180px 180px;
+      background-image: url(fluid.png);
+      background-position: 0px -150px;
+    }
+    .basic-oil::before {
+      width: 24px;
+      height: 24px;
+      background-size: 648px 624px;
+      background-image: url(recipe.png);
+      background-position: -600px -192px;
     }
     .build {
       white-space: nowrap;
@@ -117,6 +270,7 @@
 </head>
 <body>
   <a href="#nauvis">Nauvis</a> | <a href="#vulcanus">Vulcanus</a> | <a href="#gleba">Gleba</a> | <a href="#fulgora">Fulgora</a> | <a href="#space">Space</a>
+  <button id="timer">start timer</button>
   <ol id="space">
     <li class="build">
       <div class="group">
@@ -191,31 +345,145 @@
   </ol>
   <ol id="nauvis">
     <li>
-      +15 <span class="icon miner"></span> on <span class="icon iron-ore"></span><br/>
-      +24 <span class="icon stone-furnace"></span> for <span class="icon iron"></span>
+      <ol>
+        <li>
+          +15 <span class="icon miner"></span> on <span class="icon iron-ore"></span><br/>
+          +24 <span class="icon stone-furnace"></span> for <span class="icon iron"></span>
+        </li>
+        <li>
+          +2 <span class="icon assembly-1"></span> for <span class="icon gear"></span><br/>
+          +2 <span class="icon assembly-1"></span> for <span class="icon yellow-belt"></span>
+        </li>
+        <li>
+          +3 <span class="icon boiler"></span><br/>
+          +6 <span class="icon steam-engine"></span>
+        </li>
+      </ol>
     </li>
     <li>
-      +5 <span class="icon miner"></span> on <span class="icon copper-ore"></span><br/>
-      +8 <span class="icon stone-furnace"></span> for <span class="icon copper"></span>
+      <ol>
+        <li>
+          +15 <span class="icon miner"></span> on <span class="icon copper-ore"></span><br/>
+          +24 <span class="icon stone-furnace"></span> for <span class="icon copper"></span>
+        </li>
+        <li>
+          +5 <span class="icon assembly-1"></span> for <span class="icon gear"></span><br/>
+          +3 <span class="icon assembly-1"></span> for <span class="icon pipe"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon underground-pipe"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon steam-engine"></span><br />
+          +2 <span class="icon assembly-1"></span> for <span class="icon inserter"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon miner"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon assembly-1"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon long-inserter"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon fast-inserter"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon lab"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon yellow-underground"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon yellow-splitter"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon ammo"></span>
+        </li>
+        <li>
+          +9 <span class="icon assembly-1"></span> for <span class="icon cable"></span><br/>
+          +6 <span class="icon assembly-1"></span> for <span class="icon green-circuit"></span>
+        </li>
+      </ol>
     </li>
     <li>
-      +45 <span class="icon miner"></span> on <span class="icon iron-ore"></span> (total of 60)<br/>
-      +72 <span class="icon stone-furnace"></span> for <span class="icon iron"></span> (total of 96)
+      <ol>
+        <li>
+          +45 <span class="icon miner"></span> on <span class="icon iron-ore"></span> (total of 60)<br/>
+          +72 <span class="icon stone-furnace"></span> for <span class="icon iron"></span> (total of 96)
+        </li>
+        <li>
+          +15 <span class="icon boiler"></span><br/>
+          +30 <span class="icon steam-engine"></span>
+        </li>
+        <li>
+          +1 <span class="icon assembly-1"></span> for <span class="icon gear"></span><br/>
+          +10 <span class="icon assembly-1"></span> for <span class="icon science-1"></span><br />
+          +15 <span class="icon lab"></span>
+        </li>
+      </ol>
     </li>
     <li>
-      +10 <span class="icon miner"></span> on <span class="icon copper-ore"></span> (total of 15)<br/>
-      +16 <span class="icon stone-furnace"></span> for <span class="icon copper"></span> (total of 24)
+      <ol>
+        <li>
+          +15 <span class="icon miner"></span> on <span class="icon stone"></span><br/>
+          +12 <span class="icon stone-furnace"></span> for <span class="icon brick"></span>
+        </li>
+        <li>
+          +30 <span class="icon miner"></span> on <span class="icon coal"></span>
+        </li>
+        <li>
+          +12 <span class="icon assembly-1"></span> for <span class="icon science-2"></span><br />
+        </li>
+      </ol>
     </li>
     <li>
-      +15 <span class="icon miner"></span> on <span class="icon stone"></span><br/>
-      +12 <span class="icon stone-furnace"></span> for <span class="icon brick"></span>
+      <ol>
+        <li>
+          +15 <span class="icon miner"></span> on <span class="icon iron-ore"></span> (total of 75)<br/>
+          +48 <span class="icon stone-furnace"></span> for <span class="icon steel"></span> (24 of which for <span class="icon iron"></span>)
+        </li>
+        <li>
+          +1 <span class="icon assembly-1"></span> for <span class="icon red-belt"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon red-underground"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon red-splitter"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon steel-furnace"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon assembly-2"></span>
+        </li>
+        <li>
+          +3 <span class="icon assembly-1"></span> for <span class="icon red-ammo"></span><br/>
+          +1 <span class="icon assembly-1"></span> for <span class="icon wall"></span><br/>
+          +6 <span class="icon assembly-1"></span> for <span class="icon grenade"></span><br/>
+          +7 <span class="icon assembly-1"></span> for <span class="icon science-3"></span><br />
+          +15 <span class="icon lab"></span>
+        </li>
+      </ol>
     </li>
     <li>
-      +15 <span class="icon miner"></span> on <span class="icon iron-ore"></span> (total of 75)<br/>
-      +48 <span class="icon stone-furnace"></span> for <span class="icon steel"></span> (24 of which for <span class="icon iron"></span>)
+      <ol>
+        <li>
+          +? <span class="icon pump"></span> on <span class="icon crude-oil"></span>
+        </li>
+        <li>
+          +4 <span class="icon refinery"></span> for <span class="icon basic-oil"></span><br />
+          +4 <span class="icon chemical-plant"></span> for <span class="icon plastic"></span><br />
+          +3 <span class="icon chemical-plant"></span> for <span class="icon sulfur"></span>
+        </li>
+        <li>
+          upgrade existing <span class="icon assembly-1"></span> to <span class="icon assembly-2"></span><br />
+          +19 <span class="icon assembly-2"></span> for <span class="icon engine"></span>
+        </li>
+      </ol>
     </li>
     <li>
-      +? <span class="icon pump"></span> on <span class="icon crude-oil"></span><br/>
+      <ol>
+        <li>
+          +15 <span class="icon miner"></span> on <span class="icon copper-ore"></span> (total of 30)<br/>
+          upgrade 24 <span class="icon stone-furnace"></span> for <span class="icon copper"> to <span class="icon steel-furnace"></span></span>
+        </li>
+        <li>
+          +3 <span class="icon assembly-2"></span> for <span class="icon cable"></span><br/>
+          +18 <span class="icon assembly-2"></span> for <span class="icon red-circuit"></span>
+        </li>
+        <li>
+          +9 <span class="icon assembly-2"></span> for <span class="icon cable"></span><br/>
+          +6 <span class="icon assembly-2"></span> for <span class="icon green-circuit"></span>
+        </li>
+      </ol>
+    </li>
+    <li>
+      <ol>
+        <li>
+          ?
+        </li>
+        <li>
+          ?
+        </li>
+        <li>
+          +16 <span class="icon assembly-2"></span> for <span class="icon science-4"></span>
+        </li>
+      </ol>
     </li>
     <li class="build">
       <div class="group">
@@ -546,6 +814,57 @@
       }
       document.body.className += 'loadFinished';
     });
+
+    const timerBtn = document.getElementById('timer');
+    let startTime = localStorage.getItem('startTime');
+    let intervalFunc = () => {
+      if (startTime) {
+        let passedTime = Date.now() - startTime;
+        let els = document.querySelectorAll('li li:not([data-done="true"])');
+        for (let i = 0; i < els.length; i++) {
+          els[i].dataset.time = (parseInt(passedTime / 3600000)) + ':' + ('0' + parseInt(passedTime / 60000 % 60)).substr(-2) + ':' + ('0' + parseInt(passedTime / 1000 % 60)).substr(-2);
+        }
+        window.requestAnimationFrame(intervalFunc);
+      }
+    };
+    if (startTime) {
+      timerBtn.innerHTML = 'reset timer';
+      intervalFunc();
+    }
+    timerBtn.addEventListener('click', e => {
+      let els = document.querySelectorAll('li li');
+      for (let i = 0; i < els.length; i++) {
+        els[i].dataset.time = '';
+        els[i].dataset.done = '';
+      }
+      if (!startTime) {
+        timerBtn.innerHTML = 'reset timer';
+        startTime = Date.now();
+        localStorage.setItem('startTime', startTime);
+        intervalFunc();
+      } else {
+        timerBtn.innerHTML = 'start timer';
+        startTime = null;
+        localStorage.clear();
+      }
+    });
+    let els = document.querySelectorAll('li li');
+    for (let i = 0; i < els.length; i++) {
+      let val = localStorage.getItem('done-' + i);
+      if (val) {
+        els[i].dataset.done = 'true';
+        els[i].dataset.time = val;
+      }
+      els[i].addEventListener('click', e => {
+        if (els[i].dataset.done == 'true') {
+          els[i].dataset.done = 'false';
+          localStorage.removeItem('done-' + i);
+        } else {
+          els[i].dataset.done = 'true';
+          localStorage.setItem('done-' + i, els[i].dataset.time);
+        }
+      });
+    }
   </script>
 </body>
 </html>
